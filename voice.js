@@ -35,27 +35,30 @@ function connectToServer(mid) {
         //create peer id
         peer = new Peer(mid, {
             config: {
-                iceServers: [{
-                        urls: "stun:stun.l.google.com:19302"
-                    }, // Optional: fallback STUN
-
-                    {
-                        urls: "turns:xirsys.com:443?transport=tcp",
-                        username: "Arunkml", // your ident
-                        credential: "3e90bb1a-53f7-11f0-a609-0242ac150003" // your secret
+                      iceServers: [
+                        // ✅ STUN (fast + reliable)
+                        { urls: "stun:stun.l.google.com:19302" },
+                        { urls: "stun:stun1.l.google.com:19302" },
+                        { urls: "stun:stun2.l.google.com:19302" },
+                    
+                        // ✅ TURN (required for NAT traversal across networks)
+                        {
+                          urls: "turn:numb.viagenie.ca",
+                          credential: "muazkh",
+                          username: "webrtc@live.com"
+                        },
+                        {
+                          urls: "turn:turn.bistri.com:80",
+                          credential: "homeo",
+                          username: "homeo"
+                        },
+                        {
+                          urls: "turn:turn.anyfirewall.com:443?transport=tcp",
+                          credential: "webrtc",
+                          username: "webrtc"
+                        }
+                      ]
                     },
-                    {
-                        urls: "turn:xirsys.com:80?transport=udp",
-                        username: "Arunkml",
-                        credential: "3e90bb1a-53f7-11f0-a609-0242ac150003"
-                    },
-                    {
-                        urls: "turn:xirsys.com:3478?transport=udp",
-                        username: "Arunkml",
-                        credential: "3e90bb1a-53f7-11f0-a609-0242ac150003"
-                    }
-                ]
-            },
             debug: 3
         });
         //whn ourself connect to peerjs server
