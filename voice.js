@@ -32,23 +32,31 @@ function connectToServer(mid) {
         return;
     }
 
-    peer = new Peer('arun123', {
-        config: {
-            iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                {
-                    urls: 'turn:numb.viagenie.ca',
-                    credential: 'muazkh',
-                    username: 'webrtc@live.com'
-                },
-                {
-                    urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
-                    credential: 'webrtc',
-                    username: 'webrtc'
-                }
-            ]
-        }
-    });
+    peer = new Peer(mid, {
+            config: {
+                iceServers: [{
+                        urls: "stun:stun.l.google.com:19302"
+                    }, // Optional: fallback STUN
+
+                    {
+                        urls: "turns:xirsys.com:443?transport=tcp",
+                        username: "Arunkml", // your ident
+                        credential: "3e90bb1a-53f7-11f0-a609-0242ac150003" // your secret
+                    },
+                    {
+                        urls: "turn:xirsys.com:80?transport=udp",
+                        username: "Arunkml",
+                        credential: "3e90bb1a-53f7-11f0-a609-0242ac150003"
+                    },
+                    {
+                        urls: "turn:xirsys.com:3478?transport=udp",
+                        username: "Arunkml",
+                        credential: "3e90bb1a-53f7-11f0-a609-0242ac150003"
+                    }
+                ]
+            },
+            debug: 3
+        });
 
     peer.on('open', function (id) {
         myPeerId = id;
