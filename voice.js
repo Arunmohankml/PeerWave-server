@@ -33,34 +33,36 @@ function connectToServer(mid) {
         console.log("Input is empty");
     } else {
         //create peer id
-        peer = new Peer(mid, {
-            config: {
-                      iceServers: [
-                        // ✅ STUN (fast + reliable)
-                        { urls: "stun:stun.l.google.com:19302" },
-                        { urls: "stun:stun1.l.google.com:19302" },
-                        { urls: "stun:stun2.l.google.com:19302" },
-                    
-                        // ✅ TURN (required for NAT traversal across networks)
-                        {
-                          urls: "turn:numb.viagenie.ca",
-                          credential: "muazkh",
-                          username: "webrtc@live.com"
-                        },
-                        {
-                          urls: "turn:turn.bistri.com:80",
-                          credential: "homeo",
-                          username: "homeo"
-                        },
-                        {
-                          urls: "turn:turn.anyfirewall.com:443?transport=tcp",
-                          credential: "webrtc",
-                          username: "webrtc"
-                        }
-                      ]
-                    },
-            debug: 3
+        const peer = new Peer('arun123', {
+          config: {
+            iceServers: [
+              { urls: 'stun:stun.l.google.com:19302' },
+              {
+                urls: 'turn:numb.viagenie.ca',
+                credential: 'muazkh',
+                username: 'webrtc@live.com'
+              },
+              {
+                urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
+                credential: 'webrtc',
+                username: 'webrtc'
+              }
+            ]
+          }
         });
+        peerConnection.onicecandidate = event => {
+          if (event.candidate) {
+            const cand = event.candidate.candidate;
+            if (cand.includes('typ relay')) {
+              console.log('✅ TURN relay candidate used:', cand);
+            } else if (cand.includes('typ srflx')) {
+              console.log('🌐 STUN (reflexive) candidate:', cand);
+            } else if (cand.includes('typ host')) {
+              console.log('🏠 Local host candidate:', cand);
+            }
+          }
+        };
+
         //whn ourself connect to peerjs server
         peer.on('open', function(id) {
             myPeerId = id;
