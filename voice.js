@@ -24,7 +24,7 @@ async function getMedia() {
     }
 }
 
-// Connect to PeerJS server
+// Connect to PeerJS server with Metered TURN
 function connectToServer(mid) {
     console.log(mid);
     if (mid === "") {
@@ -33,30 +33,33 @@ function connectToServer(mid) {
     }
 
     peer = new Peer(mid, {
-            config: {
-                iceServers: [{
-                        urls: "stun:stun.l.google.com:19302"
-                    }, // Optional: fallback STUN
-
-                    {
-                        urls: "turns:xirsys.com:443?transport=tcp",
-                        username: "Arunkml", // your ident
-                        credential: "3e90bb1a-53f7-11f0-a609-0242ac150003" // your secret
-                    },
-                    {
-                        urls: "turn:xirsys.com:80?transport=udp",
-                        username: "Arunkml",
-                        credential: "3e90bb1a-53f7-11f0-a609-0242ac150003"
-                    },
-                    {
-                        urls: "turn:xirsys.com:3478?transport=udp",
-                        username: "Arunkml",
-                        credential: "3e90bb1a-53f7-11f0-a609-0242ac150003"
-                    }
-                ]
-            },
-            debug: 3
-        });
+        config: {
+            iceServers: [
+                { urls: "stun:stun.relay.metered.ca:80" },
+                {
+                    urls: "turn:global.relay.metered.ca:80",
+                    username: "42c77072861dbb07cf20ec03",
+                    credential: "CnxHreDWSoBxZUev"
+                },
+                {
+                    urls: "turn:global.relay.metered.ca:80?transport=tcp",
+                    username: "42c77072861dbb07cf20ec03",
+                    credential: "CnxHreDWSoBxZUev"
+                },
+                {
+                    urls: "turn:global.relay.metered.ca:443",
+                    username: "42c77072861dbb07cf20ec03",
+                    credential: "CnxHreDWSoBxZUev"
+                },
+                {
+                    urls: "turns:global.relay.metered.ca:443?transport=tcp",
+                    username: "42c77072861dbb07cf20ec03",
+                    credential: "CnxHreDWSoBxZUev"
+                }
+            ]
+        },
+        debug: 3
+    });
 
     peer.on('open', function (id) {
         myPeerId = id;
@@ -77,6 +80,7 @@ function connectToServer(mid) {
             audioElement.autoplay = true;
             document.body.appendChild(audioElement);
 
+            // ICE candidate logging
             if (call.peerConnection) {
                 call.peerConnection.addEventListener('icecandidate', event => {
                     if (event.candidate) {
