@@ -50,18 +50,6 @@ function connectToServer(mid) {
             ]
           }
         });
-        peerConnection.onicecandidate = event => {
-          if (event.candidate) {
-            const cand = event.candidate.candidate;
-            if (cand.includes('typ relay')) {
-              console.log('✅ TURN relay candidate used:', cand);
-            } else if (cand.includes('typ srflx')) {
-              console.log('🌐 STUN (reflexive) candidate:', cand);
-            } else if (cand.includes('typ host')) {
-              console.log('🏠 Local host candidate:', cand);
-            }
-          }
-        };
 
         //whn ourself connect to peerjs server
         peer.on('open', function(id) {
@@ -83,6 +71,21 @@ function connectToServer(mid) {
                 audioElement.id = call.peer + "-audio";
                 audioElement.autoplay = true;
                 document.body.appendChild(audioElement);
+                if (call.peerConnection) {
+                    call.peerConnection.addEventListener('icecandidate', event => {
+                        if (event.candidate) {
+                            const cand = event.candidate.candidate;
+                            if (cand.includes('typ relay')) {
+                                console.log('✅ TURN relay candidate used:', cand);
+                            } else if (cand.includes('typ srflx')) {
+                                console.log('🌐 STUN (reflexive) candidate:', cand);
+                            } else if (cand.includes('typ host')) {
+                                console.log('🏠 Local host candidate:', cand);
+                            }
+                        }
+                    });
+                }
+
             });
         });
     }
@@ -107,6 +110,21 @@ async function callPeer(pid) {
         audioElement.id = call.peer + "-audio";
         audioElement.autoplay = true;
         document.body.appendChild(audioElement);
+        if (call.peerConnection) {
+        call.peerConnection.addEventListener('icecandidate', event => {
+            if (event.candidate) {
+                const cand = event.candidate.candidate;
+                if (cand.includes('typ relay')) {
+                    console.log('✅ TURN relay candidate used:', cand);
+                } else if (cand.includes('typ srflx')) {
+                    console.log('🌐 STUN (reflexive) candidate:', cand);
+                } else if (cand.includes('typ host')) {
+                    console.log('🏠 Local host candidate:', cand);
+                }
+            }
+    });
+}
+
     });
     call.on('iceStateChanged', () => {
         console.log("ICE connection state changed");
