@@ -146,7 +146,7 @@ async function callPeer(pid) {
         console.log("❌ Disconnected from " + call.peer);
     });
 
-    console.log("📞 Calling " + inputId + "...");
+    console.log("📞 Calling " + pid + "...");
 }
 
 // Manage connected peer list
