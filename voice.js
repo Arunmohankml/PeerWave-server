@@ -101,12 +101,11 @@ function connectToServer(mid) {
 
 // Call another peer
 async function callPeer(pid) {
-    const inputId = document.getElementById('target-peerid').value;
+    
     if (!peer) return console.log("havnt connected to server");
-    if (inputId === "") return console.log("enter id");
 
     await getMedia();
-    const call = peer.call(inputId, myMediaStream);
+    const call = peer.call(pid, myMediaStream);
 
     call.on('stream', function (stream) {
         console.log("✅ Successfully connected with " + call.peer);
