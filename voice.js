@@ -176,6 +176,7 @@ function getAllUsers() {
 function setMyVolume(value) {
     if (gainNode) {
         gainNode.gain.value = value;
+        console.log("set my volume to ",value)
     }
 }
 
